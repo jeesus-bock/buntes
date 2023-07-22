@@ -5,12 +5,14 @@
     "bun-types": "latest"
   },
   "dependencies": {
+    "dotenv": "^16.3.1",
     "hono": "^2.2.5",
     "kysely": "^0.26.1",
     "pg": "^8.11.1"
   },
   "scripts": {
-    "start": "bun run src/index.ts"
+    "start": "bun run src/index.ts",
+    "migrate": "bun run src/migrateToLatest.ts"
   },
   "module": "src/index.js"
 }

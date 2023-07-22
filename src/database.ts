@@ -1,10 +1,9 @@
 import { Database } from './types'; // this is the Database interface we defined earlier
 import { Pool } from 'pg';
 import { Kysely, PostgresDialect } from 'kysely';
-console.log(process.env);
 const dialect = new PostgresDialect({
   pool: new Pool({
-    database: 'test',
+    database: 'buntes',
     host: 'localhost',
     user: process.env.DBUSER,
     password: process.env.DBPASS,
