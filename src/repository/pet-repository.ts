@@ -17,7 +17,7 @@ export class PetRepository {
   }
 
   public async findPets(criteria: Partial<Pet>) {
-    let query = db.selectFrom('pet');
+    let query = db.selectFrom('pet').innerJoin('species', 'species.id', 'pet.species_id');
 
     if (criteria.id) {
       query = query.where('id', '=', criteria.id); // Kysely is immutable, you must re-assign!
@@ -39,7 +39,7 @@ export class PetRepository {
       query = query.where('created_at', '=', criteria.created_at);
     }
 
-    return await query.selectAll().execute();
+    return await query.select(['pet.id', 'pet.name', 'pet.created_at', 'species.name as species', 'pet.owner_id']).execute();
   }
 
   public async updatePet(id: number, updateWith: PetUpdate) {

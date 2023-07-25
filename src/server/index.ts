@@ -10,6 +10,7 @@ export class Server {
   constructor() {
     this.server = new Hono();
     this.server.use('/favicon.ico', serveStatic({ path: './public/favicon.ico' }));
+    this.server.use('/*', serveStatic({ root: './public/' }));
     this.server.use('*', etag(), logger());
     initializeRoutes(this.server);
   }
