@@ -1,5 +1,6 @@
 import { Kysely, sql } from 'kysely';
 import { Species } from '../types';
+import { insertSpecies } from './dbInsertions';
 
 export async function up(db: Kysely<any>): Promise<void> {
   // Drop all the tables while debuging/testing
@@ -30,15 +31,13 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
     .execute();
 
-  const speciesArr: Array<Partial<Species>> = [{ name: 'Dog' }, { name: 'Cat' }, { name: 'Turtle' }, { name: 'Bunny' }, { name: 'Hamster' }, { name: 'Snake' }];
-  for (const species of speciesArr) {
-    db.insertInto('species').values(species).returningAll().executeTakeFirstOrThrow();
-  }
   await db.schema.createIndex('pet_owner_id_index').on('pet').column('owner_id').execute();
   await db.schema.createIndex('pet_species_id_index').on('pet').column('species_id').execute();
+  insertSpecies(db);
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
   await db.schema.dropTable('pet').execute();
   await db.schema.dropTable('person').execute();
+  await db.schema.dropTable('species').execute();
 }
