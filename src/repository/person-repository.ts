@@ -1,44 +1,56 @@
 import { db } from '../database';
 import { PersonUpdate, Person, NewPerson } from '../types';
 
-export async function findPersonById(id: number) {
-  return await db.selectFrom('person').where('id', '=', id).selectAll().executeTakeFirst();
-}
+export class PersonRepository {
+  private static instance?: PersonRepository = undefined;
 
-export async function findPeople(criteria: Partial<Person>) {
-  let query = db.selectFrom('person');
+  constructor() {}
 
-  if (criteria.id) {
-    query = query.where('id', '=', criteria.id); // Kysely is immutable, you must re-assign!
+  public static getInstance(): PersonRepository {
+    if (!this.instance) {
+      this.instance = new PersonRepository();
+    }
+    return this.instance;
+  }
+  public async findPersonById(id: number) {
+    return await db.selectFrom('person').where('id', '=', id).selectAll().executeTakeFirst();
   }
 
-  if (criteria.first_name) {
-    query = query.where('first_name', '=', criteria.first_name);
+  public async findPersons(criteria: Partial<Person>) {
+    let query = db.selectFrom('person');
+
+    if (criteria.id) {
+      query = query.where('id', '=', criteria.id); // Kysely is immutable, you must re-assign!
+    }
+
+    if (criteria.first_name) {
+      query = query.where('first_name', '=', criteria.first_name);
+    }
+
+    if (criteria.last_name !== undefined) {
+      query = query.where('last_name', criteria.last_name === null ? 'is' : '=', criteria.last_name);
+    }
+
+    if (criteria.gender) {
+      query = query.where('gender', '=', criteria.gender);
+    }
+
+    if (criteria.created_at) {
+      query = query.where('created_at', '=', criteria.created_at);
+    }
+
+    return await query.selectAll().execute();
   }
 
-  if (criteria.last_name !== undefined) {
-    query = query.where('last_name', criteria.last_name === null ? 'is' : '=', criteria.last_name);
+  public updatePerson(id: number, updateWith: PersonUpdate) {
+    return db.updateTable('person').set(updateWith).where('id', '=', id).execute();
   }
 
-  if (criteria.gender) {
-    query = query.where('gender', '=', criteria.gender);
+  public createPerson(person: NewPerson) {
+    return db.insertInto('person').values(person).returningAll().executeTakeFirstOrThrow();
   }
 
-  if (criteria.created_at) {
-    query = query.where('created_at', '=', criteria.created_at);
+  public async deletePerson(id: number) {
+    return await db.deleteFrom('person').where('id', '=', id).returningAll().executeTakeFirst();
   }
-
-  return await query.selectAll().execute();
-}
-
-export async function updatePerson(id: number, updateWith: PersonUpdate) {
-  await db.updateTable('person').set(updateWith).where('id', '=', id).execute();
-}
-
-export async function createPerson(person: NewPerson) {
-  return await db.insertInto('person').values(person).returningAll().executeTakeFirstOrThrow();
-}
-
-export async function deletePerson(id: number) {
-  return await db.deleteFrom('person').where('id', '=', id).returningAll().executeTakeFirst();
 }

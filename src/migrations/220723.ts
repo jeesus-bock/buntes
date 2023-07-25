@@ -1,6 +1,13 @@
 import { Kysely, sql } from 'kysely';
+import { Species } from '../types';
 
 export async function up(db: Kysely<any>): Promise<void> {
+  // Drop all the tables while debuging/testing
+  //await db.schema.dropTable('pet').execute();
+  //await db.schema.dropTable('person').execute();
+  //await db.schema.dropTable('species').execute();
+
+  // And recreate it
   await db.schema
     .createTable('person')
     .addColumn('id', 'serial', (col) => col.primaryKey())
@@ -9,16 +16,26 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('gender', 'varchar(50)', (col) => col.notNull())
     .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
     .execute();
-
+  await db.schema
+    .createTable('species')
+    .addColumn('id', 'serial', (col) => col.primaryKey())
+    .addColumn('name', 'varchar', (col) => col.notNull().unique())
+    .execute();
   await db.schema
     .createTable('pet')
     .addColumn('id', 'serial', (col) => col.primaryKey())
     .addColumn('name', 'varchar', (col) => col.notNull().unique())
     .addColumn('owner_id', 'integer', (col) => col.references('person.id').onDelete('cascade').notNull())
-    .addColumn('species', 'varchar', (col) => col.notNull())
+    .addColumn('species_id', 'integer', (col) => col.references('species.id').notNull())
+    .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
     .execute();
 
+  const speciesArr: Array<Partial<Species>> = [{ name: 'Dog' }, { name: 'Cat' }, { name: 'Turtle' }, { name: 'Bunny' }, { name: 'Hamster' }, { name: 'Snake' }];
+  for (const species of speciesArr) {
+    db.insertInto('species').values(species).returningAll().executeTakeFirstOrThrow();
+  }
   await db.schema.createIndex('pet_owner_id_index').on('pet').column('owner_id').execute();
+  await db.schema.createIndex('pet_species_id_index').on('pet').column('species_id').execute();
 }
 
 export async function down(db: Kysely<any>): Promise<void> {

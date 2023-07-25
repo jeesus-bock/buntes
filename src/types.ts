@@ -3,6 +3,7 @@ import { ColumnType, Generated, Insertable, Selectable, Updateable } from 'kysel
 export interface Database {
   person: PersonTable;
   pet: PetTable;
+  species: SpeciesTable;
 }
 
 export interface PersonTable {
@@ -38,9 +39,18 @@ export interface PetTable {
   id: Generated<number>;
   name: string;
   owner_id: number;
-  species: 'dog' | 'cat';
+  species_id: number;
+  created_at: Date;
 }
 
 export type Pet = Selectable<PetTable>;
 export type NewPet = Insertable<PetTable>;
 export type PetUpdate = Updateable<PetTable>;
+
+export interface SpeciesTable {
+  id: Generated<number>;
+  name: string;
+}
+export type Species = Selectable<SpeciesTable>;
+export type NewSpecies = Insertable<SpeciesTable>;
+export type SpeciesUpdate = Updateable<SpeciesTable>;
