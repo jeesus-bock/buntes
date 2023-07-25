@@ -1,12 +1,12 @@
 import { Kysely, sql } from 'kysely';
 import { Species } from '../types';
-import { insertSpecies } from './dbInsertions';
+import { insertPersons, insertSpecies, insertPets } from './helpers/dbInsertions';
 
 export async function up(db: Kysely<any>): Promise<void> {
   // Drop all the tables while debuging/testing
-  //await db.schema.dropTable('pet').execute();
-  //await db.schema.dropTable('person').execute();
-  //await db.schema.dropTable('species').execute();
+  await db.schema.dropTable('pet').execute();
+  await db.schema.dropTable('person').execute();
+  await db.schema.dropTable('species').execute();
 
   // And recreate it
   await db.schema
@@ -33,7 +33,9 @@ export async function up(db: Kysely<any>): Promise<void> {
 
   await db.schema.createIndex('pet_owner_id_index').on('pet').column('owner_id').execute();
   await db.schema.createIndex('pet_species_id_index').on('pet').column('species_id').execute();
-  insertSpecies(db);
+  const speciesIds = await insertSpecies(db);
+  const personIds = await insertPersons(db);
+  await insertPets(db, personIds, speciesIds);
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
