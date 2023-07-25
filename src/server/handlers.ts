@@ -18,7 +18,12 @@ export const personHandler = async (c) => {
   const resPersons: Array<any> = [];
   for (const person of res) {
     const tmpPets = await PetRepository.getInstance().findPets({ owner_id: person.id });
-    resPersons.push({ ...person, pets: tmpPets });
+    resPersons.push({
+      name: person.first_name + ' ' + person.last_name,
+      pets: tmpPets.map((p) => {
+        return { name: p.name, species: p.species };
+      }),
+    });
   }
   return c.json(resPersons);
 };
