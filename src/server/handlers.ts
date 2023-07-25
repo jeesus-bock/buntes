@@ -15,11 +15,13 @@ export const personByIdHandler = async (c) => {
 export const personHandler = async (c) => {
   const res = await PersonRepository.getInstance().findPersons({});
   // TODO: This should definitely moved to db level join!
-  const resPersons: Array<any> = [];
+  const resPersons: Array<{ name: string; pets: { name: string; species: string }[] }> = [];
+  // We go thru each of the persons and only pass the attributes we need.
   for (const person of res) {
     const tmpPets = await PetRepository.getInstance().findPets({ owner_id: person.id });
     resPersons.push({
       name: person.first_name + ' ' + person.last_name,
+      // The pets data also has to be cleaned up.
       pets: tmpPets.map((p) => {
         return { name: p.name, species: p.species };
       }),
