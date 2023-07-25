@@ -9,3 +9,8 @@
 - Create database buntes on the postgres. I recommend https://dbeaver.io/download/ as an GUI tool to mess with the db.
 - Run the migration `bun run migrate` This creates tables and installs some mock data into your database.
 - Run the app `bun run start`
+
+### Front-end
+- `cd buntesfe` the fe is in the subdirectory
+- Run `yarn` to get the deps.
+- Run `yarn build` this generates the static frontend to `../public` which is the buntes Hono http-servers static file serving directory.
