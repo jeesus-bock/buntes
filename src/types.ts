@@ -13,7 +13,7 @@ export interface PersonTable {
   id: Generated<number>;
 
   first_name: string;
-  gender: 'man' | 'woman' | 'other';
+  gender: string;
 
   // If the column is nullable in the database, make its type nullable.
   // Don't use optional properties. Optionality is always determined

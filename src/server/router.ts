@@ -1,7 +1,8 @@
-import { personHandler, petsByOwnerHandler, speciesHandler } from './handlers';
+import { personHandler, personByIdHandler, petsByOwnerHandler, speciesHandler } from './handlers';
 
 export const initializeRoutes = (server) => {
   server.get('/species', speciesHandler);
-  server.get('/person/:id', personHandler);
+  server.get('/person/:id', personByIdHandler);
+  server.get('/person', personHandler);
   server.get('/pet/owner/:id', petsByOwnerHandler);
 };

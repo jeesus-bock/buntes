@@ -7,9 +7,13 @@ export const speciesHandler = async (c) => {
   return c.json(res);
 };
 
-export const personHandler = async (c) => {
+export const personByIdHandler = async (c) => {
   const id = c.req.param('id');
   const res = await PersonRepository.getInstance().findPersonById(id);
+  return c.json(res);
+};
+export const personHandler = async (c) => {
+  const res = await PersonRepository.getInstance().findPersons({});
   return c.json(res);
 };
 export const petsByOwnerHandler = async (c) => {
