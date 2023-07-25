@@ -12,6 +12,10 @@ export const personHandler = async (c) => {
   const res = await PersonRepository.getInstance().findPersonById(id);
   return c.json(res);
 };
+export const personPetsHandler = async (c) => {
+  const res = await PersonRepository.getInstance().getPersonPets();
+  return c.json(res);
+};
 
 export const petsByOwnerHandler = async (c) => {
   const id = c.req.param('id');

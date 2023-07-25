@@ -41,7 +41,16 @@ export class PersonRepository {
 
     return await query.selectAll().execute();
   }
-
+  public async getPersonPets() {
+    const result = await db
+      .selectFrom('person')
+      .innerJoin('pet', 'pet.owner_id', 'person.id')
+      // `select` needs to come after the call to `innerJoin` so
+      // that you can select from the joined table.
+      .select(['person.id', 'pet.name as pet_name'])
+      .execute();
+    return result;
+  }
   public updatePerson(id: number, updateWith: PersonUpdate) {
     return db.updateTable('person').set(updateWith).where('id', '=', id).execute();
   }
