@@ -4,12 +4,12 @@ import { promises as fs } from 'fs';
 import { Kysely, Migrator, PostgresDialect, FileMigrationProvider } from 'kysely';
 import { Database } from './types';
 import 'dotenv/config';
-async function migrateToLatest() {
+export async function migrateToLatest() {
   const db = new Kysely<Database>({
     dialect: new PostgresDialect({
       pool: new Pool({
-        database: 'buntes',
-        host: 'localhost',
+        database: process.env.DBNAME,
+        host: 'postgres',
         user: process.env.DBUSER,
         password: process.env.DBPASS,
         port: 5432,

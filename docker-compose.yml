@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:16beta2-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=$DBUSER
+      - POSTGRES_PASSWORD=$DBPASS
+      - POSTGRES_DB=$DBNAME
+    ports:
+      - '5433:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -d $DBNAME']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  buntes:
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      - DBUSER=$DBUSER
+      - DBPASS=$DBPASS
+      - DBNAME=$DBNAME
+    depends_on:
+      postgres:
+        condition: service_healthy
+    links:
+      - postgres
+volumes:
+  db:
+    driver: local

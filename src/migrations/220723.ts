@@ -4,10 +4,10 @@ import { insertPersons, insertSpecies, insertPets } from './helpers/dbInsertions
 
 export async function up(db: Kysely<any>): Promise<void> {
   // Drop all the tables while debuging/testing
-  await db.schema.dropTable('pet').execute();
+  /*await db.schema.dropTable('pet').execute();
   await db.schema.dropTable('person').execute();
   await db.schema.dropTable('species').execute();
-
+*/
   // And recreate it
   await db.schema
     .createTable('person')
@@ -25,7 +25,7 @@ export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('pet')
     .addColumn('id', 'serial', (col) => col.primaryKey())
-    .addColumn('name', 'varchar', (col) => col.notNull().unique())
+    .addColumn('name', 'varchar', (col) => col.notNull())
     .addColumn('owner_id', 'integer', (col) => col.references('person.id').onDelete('cascade').notNull())
     .addColumn('species_id', 'integer', (col) => col.references('species.id').notNull())
     .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
@@ -39,7 +39,7 @@ export async function up(db: Kysely<any>): Promise<void> {
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
-  await db.schema.dropTable('pet').execute();
+  /*await db.schema.dropTable('pet').execute();
   await db.schema.dropTable('person').execute();
-  await db.schema.dropTable('species').execute();
+  await db.schema.dropTable('species').execute();*/
 }

@@ -1,15 +1,17 @@
 import { Database } from './types'; // this is the Database interface we defined earlier
 import { Pool } from 'pg';
 import { Kysely, PostgresDialect } from 'kysely';
+const dbOpts = {
+  database: process.env.DBNAME,
+  host: 'postgres',
+  user: process.env.DBUSER,
+  password: process.env.DBPASS,
+  port: 5432,
+  max: 10,
+};
+console.log('dbOpts', dbOpts);
 const dialect = new PostgresDialect({
-  pool: new Pool({
-    database: 'buntes',
-    host: 'localhost',
-    user: process.env.DBUSER,
-    password: process.env.DBPASS,
-    port: 5432,
-    max: 10,
-  }),
+  pool: new Pool(dbOpts),
 });
 
 // Database interface is passed to Kysely's constructor, and from now on, Kysely
