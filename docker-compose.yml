@@ -18,7 +18,7 @@ services:
   buntes:
     build: .
     ports:
-      - '3000:3000'
+      - '$PORT:$PORT'
     environment:
       - DBUSER=$DBUSER
       - DBPASS=$DBPASS
