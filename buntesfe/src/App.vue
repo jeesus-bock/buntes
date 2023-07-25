@@ -1,8 +1,8 @@
 <template>
   <header>
     <nav class="flex gap-4">
-      <a @click="view = HOME">Home</a>
-      <a @click="view = PERSONS">Persons</a>
+      <a @click="view = HOME" class="cursor-pointer">Home</a>
+      <a @click="view = PERSONS" class="cursor-pointer">Persons</a>
     </nav>
   </header>
   <home-view v-if="view == HOME"></home-view>
