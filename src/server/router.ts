@@ -1,8 +1,7 @@
-import { SpeciesRepository } from '../repository/species-repository';
+import { personHandler, petsByOwnerHandler, speciesHandler } from './handlers';
 
 export const initializeRoutes = (server) => {
-  server.get('/species', async (c) => {
-    const res = await SpeciesRepository.getInstance().getSpecieses();
-    return c.json(res);
-  });
+  server.get('/species', speciesHandler);
+  server.get('/person/:id', personHandler);
+  server.get('/pet/owner/:id', petsByOwnerHandler);
 };
