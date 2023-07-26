@@ -13,7 +13,7 @@ console.log('dbOpts', dbOpts);
 const dialect = new PostgresDialect({
   pool: new Pool(dbOpts),
 });
-
+console.log('Connected to db ' + dbOpts.database + ' at ' + dbOpts.host + ':' + dbOpts.port);
 // Database interface is passed to Kysely's constructor, and from now on, Kysely
 // knows your database structure.
 // Dialect is passed to Kysely's constructor, and from now on, Kysely knows how

@@ -1,3 +1,6 @@
+import { Hono, Context } from 'hono';
+
+import { httpRequestTimer } from '../prometheus';
 import { PersonRepository } from '../repository/person-repository';
 import { PetRepository } from '../repository/pet-repository';
 import { SpeciesRepository } from '../repository/species-repository';
@@ -7,12 +10,18 @@ export const speciesHandler = async (c) => {
   return c.json(res);
 };
 
-export const personByIdHandler = async (c) => {
+export const personByIdHandler = async (c: Context) => {
+  const start = performance.now();
+
   const id = c.req.param('id');
-  const res = await PersonRepository.getInstance().findPersonById(id);
+  const res = await PersonRepository.getInstance().findPersonById(parseInt(id));
+  const responseTimeInMs = performance.now() - start;
+  httpRequestTimer.labels(c.req.method, c.req.url, c.res.status.toString()).observe(responseTimeInMs);
   return c.json(res);
 };
-export const personHandler = async (c) => {
+export const personHandler = async (c: Context) => {
+  const start = performance.now();
+  console.log('personHandler');
   const res = await PersonRepository.getInstance().findPersons({});
   // TODO: This should definitely moved to db level join!
   const resPersons: Array<{ name: string; pets: { name: string; species: string }[] }> = [];
@@ -27,10 +36,15 @@ export const personHandler = async (c) => {
       }),
     });
   }
+  const responseTimeInMs = performance.now() - start;
+  httpRequestTimer.labels(c.req.method, c.req.url, c.res.status.toString()).observe(responseTimeInMs);
   return c.json(resPersons);
 };
 export const petsByOwnerHandler = async (c) => {
+  const start = performance.now();
   const id = c.req.param('id');
   const res = await PetRepository.getInstance().findPets({ owner_id: id });
+  const responseTimeInMs = performance.now() - start;
+  httpRequestTimer.labels(c.req.method, c.req.url, c.res.status.toString()).observe(responseTimeInMs);
   return c.json(res);
 };

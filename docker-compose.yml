@@ -25,11 +25,32 @@ services:
       - DBPASS=$DBPASS
       - DBNAME=$DBNAME
       - PORT=$PORT
+      - HOST=$HOST
     depends_on:
       postgres:
         condition: service_healthy
     links:
       - postgres
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./monitoring/:/etc/prometheus/
+    ports:
+      - 9090:9090
+    links:
+      - buntes
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - ./monitoring/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+    ports:
+      - 3001:3000
+    environment:
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    links:
+      - prometheus
 volumes:
   db:
     driver: local

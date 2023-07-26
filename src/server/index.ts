@@ -3,7 +3,7 @@ import { etag } from 'hono/etag';
 import { logger } from 'hono/logger';
 import { ServeStaticOptions, serveStatic } from 'hono/serve-static.bun';
 import { initializeRoutes } from './router';
-
+import { initPrometheus } from '../prometheus';
 export class Server {
   private static instance?: Server = undefined;
   private server: Hono;
@@ -12,6 +12,7 @@ export class Server {
     this.server.use('/favicon.ico', serveStatic({ path: './public/favicon.ico' }));
     this.server.use('*', etag(), logger());
     initializeRoutes(this.server);
+    initPrometheus(this.server);
     this.server.use('/*', serveStatic({ root: './public' }));
   }
 
