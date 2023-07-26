@@ -1,0 +1,6 @@
+global:
+  scrape_interval: 5s
+scrape_configs:
+  - job_name: "buntestats"
+    static_configs:
+      - targets: ["buntes:3000"]
