@@ -13,7 +13,7 @@ export class Server {
     this.server.use('*', etag(), logger());
     initializeRoutes(this.server);
     initPrometheus(this.server);
-    let serveOps: ServeStaticOptions = { root: './public', rewriteRequestPath: (path) => path.replace(/^\/persons/, '/') };
+    let serveOps: ServeStaticOptions = { root: './public', rewriteRequestPath: (path) => path.replace(/^\/posts/, '/') };
     this.server.use('/*', serveStatic(serveOps));
   }
 

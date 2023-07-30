@@ -1,4 +1,5 @@
-import { Person, Pet, Species } from '../../types';
+import { use } from 'chai';
+import { Post, Comment, Species, User } from '../../types';
 import { faker } from '@faker-js/faker';
 export const insertSpecies = async (db) => {
   const idArr: Array<number> = [];
@@ -10,23 +11,48 @@ export const insertSpecies = async (db) => {
   return idArr;
 };
 
-export const insertPersons = async (db) => {
+export const insertUsers = async (db) => {
   const idArr: Array<number> = [];
-  for (let i = 0; i < 100; i++) {
-    const person = { gender: faker.person.gender(), first_name: faker.person.firstName(), last_name: faker.person.lastName() } as Partial<Person>;
-    const { id } = await db.insertInto('person').values(person).returningAll().executeTakeFirstOrThrow();
+  const userArr: Array<Partial<User>> = [
+    { user_name: 'MasteOfUniverse' },
+    { user_name: 'Catnip' },
+    { user_name: 'TurtleBeach' },
+    { user_name: 'BunnyHopper' },
+    { user_name: 'HamsterMan' },
+    { user_name: 'SnakeEyes' },
+  ];
+  for (const user of userArr) {
+    const { id } = await db.insertInto('user').values(user).returningAll().executeTakeFirstOrThrow();
     idArr.push(id);
   }
   return idArr;
 };
 
-export const insertPets = async (db, personIds: Array<number>, speciesIds: Array<number>) => {
+export const insertPosts = async (db, userIds: number[]) => {
+  const idArr: Array<number> = [];
   for (let i = 0; i < 100; i++) {
-    const pet = {
-      name: faker.person.firstName(),
-      owner_id: personIds[Math.floor(Math.random() * personIds.length)],
+    const post = { content: faker.music.songName(), user_id: userIds[Math.floor(Math.random() * userIds.length)] } as Partial<Post>;
+    const { id } = await db.insertInto('post').values(post).returningAll().executeTakeFirstOrThrow();
+    idArr.push(id);
+  }
+  return idArr;
+};
+
+export const insertComments = async (db, postIds: Array<number>, speciesIds: Array<number>, userIds: number[]) => {
+  let commentIds = [];
+  for (let i = 0; i < 100; i++) {
+    let parent_comment_id = null;
+    if (Math.round(Math.random())) {
+      parent_comment_id = commentIds[Math.floor(Math.random() * commentIds.length)];
+    }
+    const comment = {
+      content: faker.music.genre(),
+      user_id: userIds[Math.floor(Math.random() * userIds.length)],
+      post_id: postIds[Math.floor(Math.random() * postIds.length)],
+      parent_comment_id: parent_comment_id,
       species_id: speciesIds[Math.floor(Math.random() * speciesIds.length)],
-    } as Partial<Pet>;
-    const { id } = await db.insertInto('pet').values(pet).returningAll().executeTakeFirstOrThrow();
+    } as Partial<Comment>;
+    const { id } = await db.insertInto('comment').values(comment).returningAll().executeTakeFirstOrThrow();
+    commentIds.push(id);
   }
 };

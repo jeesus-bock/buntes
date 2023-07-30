@@ -11,7 +11,6 @@ RUN apt update
 RUN apt install zip -y
 RUN bun upgrade --canary
 RUN bun install
-RUN bun run build
 
 WORKDIR '/buntes/buntesfe'
 RUN bun install

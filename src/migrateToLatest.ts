@@ -9,7 +9,7 @@ export async function migrateToLatest() {
     dialect: new PostgresDialect({
       pool: new Pool({
         database: process.env.DBNAME,
-        host: 'postgres',
+        host: process.env.DBHOST,
         user: process.env.DBUSER,
         password: process.env.DBPASS,
         port: 5432,

@@ -1,4 +1,5 @@
-export interface Person {
-  name: string
-  pets: { name: string; species: string }[]
+export interface Post {
+  author: string
+  content: string
+  comments: { author: string; content: string }[]
 }
