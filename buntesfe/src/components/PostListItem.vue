@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col gap-2 p-4 mb-8 border shadow-md w-96">
-    {{ props.item.name }}
+    {{ props.item }}
     <div class="p-4 bg-stone-200">
-      <div v-for="comment in props.item.comments">{{ comment.name }} - {{ comment.species }}</div>
+      <div v-for="comment in props.item.comments">{{ comment.author }} - {{ comment.content }}</div>
     </div>
   </div>
 </template>
