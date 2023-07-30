@@ -31,7 +31,7 @@ export const insertUsers = async (db) => {
 export const insertPosts = async (db, userIds: number[]) => {
   const idArr: Array<number> = [];
   for (let i = 0; i < 100; i++) {
-    const post = { content: faker.music.songName(), user_id: userIds[Math.floor(Math.random() * userIds.length)] } as Partial<Post>;
+    const post = { content: faker.lorem.sentences(3), user_id: userIds[Math.floor(Math.random() * userIds.length)] } as Partial<Post>;
     const { id } = await db.insertInto('post').values(post).returningAll().executeTakeFirstOrThrow();
     idArr.push(id);
   }
@@ -42,17 +42,20 @@ export const insertComments = async (db, postIds: Array<number>, speciesIds: Arr
   let commentIds = [];
   for (let i = 0; i < 100; i++) {
     let parent_comment_id = null;
+    let post_id = postIds[Math.floor(Math.random() * postIds.length)];
+    if (!commentIds[post_id]) commentIds[post_id] = [];
     if (Math.round(Math.random())) {
-      parent_comment_id = commentIds[Math.floor(Math.random() * commentIds.length)];
+      parent_comment_id = commentIds[post_id][Math.floor(Math.random() * commentIds[post_id].length)];
     }
     const comment = {
-      content: faker.music.genre(),
+      content: faker.lorem.sentences(3),
       user_id: userIds[Math.floor(Math.random() * userIds.length)],
-      post_id: postIds[Math.floor(Math.random() * postIds.length)],
+      post_id: post_id,
       parent_comment_id: parent_comment_id,
       species_id: speciesIds[Math.floor(Math.random() * speciesIds.length)],
     } as Partial<Comment>;
     const { id } = await db.insertInto('comment').values(comment).returningAll().executeTakeFirstOrThrow();
-    commentIds.push(id);
+
+    commentIds[post_id].push(id);
   }
 };

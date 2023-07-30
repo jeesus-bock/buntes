@@ -44,7 +44,7 @@ export class PostRepository {
             .innerJoin('species', 'species.id', 'comment.species_id')
             .innerJoin('user', 'user.id', 'comment.user_id')
 
-            .select(['user.user_name', 'comment.content', 'comment.parent_comment_id', 'comment.user_id', 'species.name as species'])
+            .select(['user.user_name', 'comment.content', 'comment.id', 'comment.parent_comment_id', 'comment.user_id', 'species.name as species'])
             .whereRef('comment.post_id', '=', 'post.id')
             .orderBy('comment.created_at')
         ).as('comments'),

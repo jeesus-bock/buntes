@@ -1,8 +1,18 @@
 <template>
   <header>
-    <nav class="flex gap-4">
-      <a @click="uiStore.view = HOME" class="cursor-pointer">Home</a>
-      <a @click="uiStore.view = PERSONS" class="cursor-pointer">Posts</a>
+    <nav class="flex w-full gap-4 border-b bg-slate-100">
+      <a
+        @click="uiStore.view = HOME"
+        class="px-4 py-1 cursor-pointer"
+        :class="{ 'bg-slate-200': uiStore.view == HOME }"
+        >Home</a
+      >
+      <a
+        @click="uiStore.view = PERSONS"
+        class="px-4 py-1 cursor-pointer"
+        :class="{ 'bg-slate-200': uiStore.view == PERSONS }"
+        >Posts</a
+      >
     </nav>
   </header>
   <home-view v-if="uiStore.view == HOME"></home-view>

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-2 p-4 mb-8 border shadow-md w-96">
+  <div class="flex flex-col gap-2 p-4 border shadow-md bg-purple-50 w-96">
     {{ props.item }}
     <div class="p-4 bg-stone-200">
       <div v-for="comment in props.item.comments">{{ comment.author }} - {{ comment.content }}</div>

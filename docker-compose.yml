@@ -16,6 +16,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
+    volumes:
+      - db:/bitnami/redis/data
   buntes:
     build: .
     ports:
@@ -32,6 +40,7 @@ services:
         condition: service_healthy
     links:
       - postgres
+      - redis
 #  prometheus:
 #    image: prom/prometheus:latest
 #    volumes:

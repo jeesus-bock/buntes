@@ -1,6 +1,5 @@
 <template>
-  <div class="about">
-    <h1>This is an postsview</h1>
+  <div class="p-4 bg-orange-50">
     <post-list :items="postStore.posts" />
   </div>
 </template>
