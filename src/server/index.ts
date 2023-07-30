@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { etag } from 'hono/etag';
 import { logger } from 'hono/logger';
-import { ServeStaticOptions, serveStatic } from 'hono/serve-static.bun';
+import { ServeStaticOptions, serveStatic } from '@hono/node-server/serve-static';
 import { initializeRoutes } from './router';
 import { initPrometheus } from '../prometheus';
 export class Server {
@@ -13,7 +13,8 @@ export class Server {
     this.server.use('*', etag(), logger());
     initializeRoutes(this.server);
     initPrometheus(this.server);
-    this.server.use('/*', serveStatic({ root: './public' }));
+    let serveOps: ServeStaticOptions = { root: './public', rewriteRequestPath: (path) => path.replace(/^\/persons/, '/') };
+    this.server.use('/*', serveStatic(serveOps));
   }
 
   public static getInstance(): Server {

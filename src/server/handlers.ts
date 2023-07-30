@@ -26,7 +26,7 @@ export const personHandler = async (c: Context) => {
   // TODO: This should definitely moved to db level join!
   const resPersons: Array<{ name: string; pets: { name: string; species: string }[] }> = [];
   // We go thru each of the persons and only pass the attributes we need.
-  for (const person of res) {
+  /*for (const person of res) {
     const tmpPets = await PetRepository.getInstance().findPets({ owner_id: person.id });
     resPersons.push({
       name: person.first_name + ' ' + person.last_name,
@@ -38,7 +38,8 @@ export const personHandler = async (c: Context) => {
   }
   const responseTimeInMs = performance.now() - start;
   httpRequestTimer.labels(c.req.method, c.req.url, c.res.status.toString()).observe(responseTimeInMs);
-  return c.json(resPersons);
+  */
+  return c.json(res);
 };
 export const petsByOwnerHandler = async (c) => {
   const start = performance.now();

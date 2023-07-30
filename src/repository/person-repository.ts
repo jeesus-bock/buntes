@@ -1,5 +1,7 @@
+import { sql } from 'kysely';
 import { db } from '../database';
 import { PersonUpdate, Person, NewPerson } from '../types';
+import { jsonArrayFrom } from 'kysely/helpers/postgres';
 
 export class PersonRepository {
   private static instance?: PersonRepository = undefined;
@@ -39,9 +41,13 @@ export class PersonRepository {
       query = query.where('created_at', '=', criteria.created_at);
     }
 
-    return await query.selectAll().execute();
+    return await query
+      .select((eb) => [
+        eb.fn('concat', ['first_name', sql`' '`, 'last_name']).as('fullname'),
+        jsonArrayFrom(eb.selectFrom('pet').select(['pet.id as pet_id', 'pet.name']).whereRef('pet.owner_id', '=', 'person.id').orderBy('pet.name')).as('pets'),
+      ])
+      .execute();
   }
-
   public updatePerson(id: number, updateWith: PersonUpdate) {
     return db.updateTable('person').set(updateWith).where('id', '=', id).execute();
   }
