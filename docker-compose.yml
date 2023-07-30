@@ -26,6 +26,7 @@ services:
       - DBNAME=$DBNAME
       - PORT=$PORT
       - HOST=$HOST
+      - DBHOST=$DBHOST
     depends_on:
       postgres:
         condition: service_healthy

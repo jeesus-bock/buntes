@@ -43,8 +43,15 @@ export class PersonRepository {
 
     return await query
       .select((eb) => [
-        eb.fn('concat', ['first_name', sql`' '`, 'last_name']).as('fullname'),
-        jsonArrayFrom(eb.selectFrom('pet').select(['pet.id as pet_id', 'pet.name']).whereRef('pet.owner_id', '=', 'person.id').orderBy('pet.name')).as('pets'),
+        eb.fn('concat', ['first_name', sql`' '`, 'last_name']).as('name'),
+        jsonArrayFrom(
+          eb
+            .selectFrom('pet')
+            .innerJoin('species', 'species.id', 'pet.species_id')
+            .select(['pet.name', 'species.name as species'])
+            .whereRef('pet.owner_id', '=', 'person.id')
+            .orderBy('pet.name')
+        ).as('pets'),
       ])
       .execute();
   }

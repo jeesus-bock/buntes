@@ -1,7 +1,9 @@
 <template>
-  <div class="border p-4 flex flex-col gap-2">
+  <div class="flex flex-col gap-2 p-4 border shadow-md w-96">
     {{ props.item.name }}
-    <div v-for="pet in props.item.pets">{{ pet.name }} - {{ pet.species }}</div>
+    <div class="shadow-sm">
+      <div v-for="pet in props.item.pets">{{ pet.name }} - {{ pet.species }}</div>
+    </div>
   </div>
 </template>
 <script setup lang="ts">

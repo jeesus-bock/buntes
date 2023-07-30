@@ -3,7 +3,7 @@ import { Pool } from 'pg';
 import { Kysely, PostgresDialect } from 'kysely';
 const dbOpts = {
   database: process.env.DBNAME,
-  host: 'postgres',
+  host: process.env.DBHOST,
   user: process.env.DBUSER,
   password: process.env.DBPASS,
   port: 5432,
